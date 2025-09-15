@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Défis Érotiques</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4da6;
+    }
+    #defis {
+      margin-top: 20px;
+    }
+    .defi {
+      background: #2b2b2b;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      cursor: pointer;
+      background: #ff4da6;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>💋 Défis Érotiques 💋</h1>
+
+  <input type="text" id="nouveauDefi" placeholder="Écris ton défi ici">
+  <button onclick="ajouterDefi()">Ajouter</button>
+  <button onclick="choisirDefi()">Choisir un défi aléatoire</button>
+
+  <h2>Liste des défis</h2>
+  <div id="defis"></div>
+
+  <h2>Défi choisi</h2>
+  <div id="defiAleatoire" style="font-size:20px; font-weight:bold; color:#ff4da6;"></div>
+
+  <script>
+    let defis = JSON.parse(localStorage.getItem("defis")) || [];
+
+    function afficherDefis() {
+      const zone = document.getElementById("defis");
+      zone.innerHTML = "";
+      defis.forEach((d, i) => {
+        zone.innerHTML += `<div class="defi">${i+1}. ${d}</div>`;
+      });
+    }
+
+    function ajouterDefi() {
+      const texte = document.getElementById("nouveauDefi").value.trim();
+      if (texte) {
+        defis.push(texte);
+        localStorage.setItem("defis", JSON.stringify(defis));
+        document.getElementById("nouveauDefi").value = "";
+        afficherDefis();
+      }
+    }
+
+    function choisirDefi() {
+      if (defis.length > 0) {
+        const randomIndex = Math.floor(Math.random() * defis.length);
+        document.getElementById("defiAleatoire").innerText = defis[randomIndex];
+      } else {
+        document.getElementById("defiAleatoire").innerText = "Aucun défi pour le moment !";
+      }
+    }
+
+    // afficher au chargement
+    afficherDefis();
+  </script>
+</body>
+</html>
