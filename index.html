@@ -88,37 +88,47 @@
   </div>
 
   <script>
-    // Chargement depuis le localStorage sinon valeurs de base
-    let defis = JSON.parse(localStorage.getItem("defis")) || {
-      1: ["Chante une chanson à ton/ta partenaire."],
-      2: ["Embrasse ton/ta partenaire pendant 1 minute sans t’arrêter."],
-      3: ["Embrasse ton/ta partenaire dans le cou jusqu’à le/la faire frissonner."],
-      4: ["Enlève un vêtement sans les mains."],
-      5: ["Fais un strip-tease complet."]
-    };
+    // 👉 Mets ici ton URL de déploiement Apps Script
+    const API_URL = "https://script.google.com/macros/s/AKfycbw8klWQQTfcMRyvbLJD2i80lznpdF44EA38Ust_wQJG-Wx-474HXYcs1zh0deULjgSX0g/exec";
 
-    function sauvegarder() {
-      localStorage.setItem("defis", JSON.stringify(defis));
+    // Charger les défis depuis Google Sheets
+    async function chargerDefis(niveau) {
+      let res = await fetch(API_URL);
+      let data = await res.json();
+      return data.filter(d => d.niveau == niveau);
     }
 
-    function nouveauDefi() {
+    // Tirer un défi aléatoire
+    async function nouveauDefi() {
       const niveau = document.getElementById("niveau").value;
-      const liste = defis[niveau];
-      const index = Math.floor(Math.random() * liste.length);
-      document.getElementById("defi").textContent = liste[index];
+      let defis = await chargerDefis(niveau);
+
+      if (defis.length === 0) {
+        document.getElementById("defi").textContent = "Aucun défi pour ce niveau.";
+        return;
+      }
+
+      const index = Math.floor(Math.random() * defis.length);
+      document.getElementById("defi").textContent = defis[index].texte;
     }
 
-    function ajouterDefi() {
+    // Ajouter un défi dans Google Sheets
+    async function ajouterDefi() {
       const texte = document.getElementById("nouveau").value.trim();
       const niveau = document.getElementById("niveauAjout").value;
-      if (texte) {
-        defis[niveau].push(texte);
-        sauvegarder();
-        alert("Défi ajouté avec succès !");
-        document.getElementById("nouveau").value = "";
-      } else {
+
+      if (!texte) {
         alert("Écris un défi avant d’ajouter !");
+        return;
       }
+
+      await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ texte: texte, niveau: niveau })
+      });
+
+      alert("Défi ajouté avec succès !");
+      document.getElementById("nouveau").value = "";
     }
   </script>
 </body>
