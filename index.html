@@ -1,125 +1,79 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Défis érotiques</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e1e;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    #defi {
-      font-size: 1.3em;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 10px;
-      background: #2c2c2c;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      max-width: 700px;
-      text-align: center;
-    }
-    button, select, input {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 1em;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button {
-      background: #e91e63;
-      color: white;
-    }
-    button:hover {
-      background: #c2185b;
-    }
-    select, input {
-      background: #333;
-      color: #fff;
-    }
-    #ajout {
-      margin-top: 30px;
-      background: #2c2c2c;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 700px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Jeu de défis 😉</h1>
-  
-  <label for="niveau">Choisis un niveau :</label>
-  <select id="niveau">
-    <option value="1">Niveau 1 - Soft</option>
-    <option value="2">Niveau 2 - Osé</option>
-    <option value="3">Niveau 3 - Intermédiaire</option>
-    <option value="4">Niveau 4 - Hot</option>
-    <option value="5">Niveau 5 - Très hot</option>
-  </select>
-  
-  <div id="defi">Clique sur le bouton pour un défi</div>
-  <button onclick="nouveauDefi()">🎲 Nouveau défi</button>
+<script>
+const API_URL = "<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbw8klWQQTfcMRyvbLJD2i80lznpdF44EA38Ust_wQJG-Wx-474HXYcs1zh0deULjgSX0g/exec"; // colle l’URL ici
 
-  <!-- Formulaire pour ajouter un défi -->
-  <div id="ajout">
-    <h2>➕ Ajouter un nouveau défi</h2>
-    <label for="nouveau">Écris ton défi :</label><br>
-    <input type="text" id="nouveau" placeholder="Ton défi..." size="50">
-    <br>
-    <label for="niveauAjout">Choisis un niveau :</label>
-    <select id="niveauAjout">
-      <option value="1">Niveau 1 - Soft</option>
-      <option value="2">Niveau 2 - Osé</option>
-      <option value="3">Niveau 3 - Intermédiaire</option>
-      <option value="4">Niveau 4 - Hot</option>
-      <option value="5">Niveau 5 - Très hot</option>
-    </select>
-    <br>
-    <button onclick="ajouterDefi()">Ajouter</button>
-  </div>
+async function chargerDefis(niveau) {
+  let res = await fetch(API_URL);
+  let data = await res.json();
+  return data.filter(d => d.niveau == niveau);
+}
 
-  <script>
-    // Chargement depuis le localStorage sinon valeurs de base
-    let defis = JSON.parse(localStorage.getItem("defis")) || {
-      1: ["Chante une chanson à ton/ta partenaire."],
-      2: ["Embrasse ton/ta partenaire pendant 1 minute sans t’arrêter."],
-      3: ["Embrasse ton/ta partenaire dans le cou jusqu’à le/la faire frissonner."],
-      4: ["Enlève un vêtement sans les mains."],
-      5: ["Fais un strip-tease complet."]
-    };
+async function nouveauDefi() {
+  const niveau = document.getElementById("niveau").value;
+  let defis = await chargerDefis(niveau);
 
-    function sauvegarder() {
-      localStorage.setItem("defis", JSON.stringify(defis));
-    }
+  if (defis.length === 0) {
+    document.getElementById("defi").textContent = "Aucun défi pour ce niveau.";
+    return;
+  }
 
-    function nouveauDefi() {
-      const niveau = document.getElementById("niveau").value;
-      const liste = defis[niveau];
-      const index = Math.floor(Math.random() * liste.length);
-      document.getElementById("defi").textContent = liste[index];
-    }
+  const index = Math.floor(Math.random() * defis.length);
+  document.getElementById("defi").textContent = defis[index].texte;
+}
 
-    function ajouterDefi() {
-      const texte = document.getElementById("nouveau").value.trim();
-      const niveau = document.getElementById("niveauAjout").value;
-      if (texte) {
-        defis[niveau].push(texte);
-        sauvegarder();
-        alert("Défi ajouté avec succès !");
-        document.getElementById("nouveau").value = "";
-      } else {
-        alert("Écris un défi avant d’ajouter !");
-      }
-    }
-  </script>
-</body>
-</html>
+async function ajouterDefi() {
+  const texte = document.getElementById("nouveau").value.trim();
+  const niveau = document.getElementById("niveauAjout").value;
+
+  if (!texte) {
+    alert("Écris un défi avant d’ajouter !");
+    return;
+  }
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ texte: texte, niveau: niveau })
+  });
+
+  alert("Défi ajouté avec succès !");
+  document.getElementById("nouveau").value = "";
+}
+</script>"; // colle l’URL ici
+
+async function chargerDefis(niveau) {
+  let res = await fetch(API_URL);
+  let data = await res.json();
+  return data.filter(d => d.niveau == niveau);
+}
+
+async function nouveauDefi() {
+  const niveau = document.getElementById("niveau").value;
+  let defis = await chargerDefis(niveau);
+
+  if (defis.length === 0) {
+    document.getElementById("defi").textContent = "Aucun défi pour ce niveau.";
+    return;
+  }
+
+  const index = Math.floor(Math.random() * defis.length);
+  document.getElementById("defi").textContent = defis[index].texte;
+}
+
+async function ajouterDefi() {
+  const texte = document.getElementById("nouveau").value.trim();
+  const niveau = document.getElementById("niveauAjout").value;
+
+  if (!texte) {
+    alert("Écris un défi avant d’ajouter !");
+    return;
+  }
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ texte: texte, niveau: niveau })
+  });
+
+  alert("Défi ajouté avec succès !");
+  document.getElementById("nouveau").value = "";
+}
+</script>
