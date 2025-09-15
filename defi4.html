@@ -1,0 +1,27 @@
+<script>
+  let defis = JSON.parse(localStorage.getItem("defis")) || {1:[],2:[],3:[],4:[],5:[]};
+
+  function nouveauDefi() {
+    const niveau = document.getElementById("niveau").value;
+    const liste = defis[niveau];
+    if (!liste || liste.length === 0) {
+      document.getElementById("defi").textContent = "Aucun défi enregistré pour ce niveau.";
+      return;
+    }
+    const index = Math.floor(Math.random() * liste.length);
+    document.getElementById("defi").textContent = liste[index];
+  }
+
+  function ajouterDefi() {
+    const texte = document.getElementById("nouveau").value.trim();
+    const niveau = document.getElementById("niveauAjout").value;
+    if (texte) {
+      defis[niveau].push(texte);
+      localStorage.setItem("defis", JSON.stringify(defis));
+      alert("Défi ajouté et enregistré !");
+      document.getElementById("nouveau").value = "";
+    } else {
+      alert("Écris un défi avant d’ajouter !");
+    }
+  }
+</script>
