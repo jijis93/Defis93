@@ -2,166 +2,211 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Défis érotiques</title>
+  <title>🔥 Jeux de couple 🔥</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #1e1e1e;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #2a002a, #000);
       color: #fff;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
       align-items: center;
       min-height: 100vh;
       margin: 0;
       padding: 20px;
     }
-    #defi {
-      font-size: 1.3em;
-      margin: 20px;
+    h1 {
+      color: #ff0077;
+      text-shadow: 0 0 15px #ff0077, 0 0 30px #ff3399;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    nav {
+      margin-bottom: 30px;
+    }
+    nav button {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff0077, #ff3399);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #ff0077;
+    }
+    nav button:hover {
+      background: linear-gradient(135deg, #ff3399, #ff66cc);
+      box-shadow: 0 0 25px #ff3399;
+    }
+    section {
+      display: none;
+      max-width: 800px;
+      width: 100%;
+    }
+    section.active {
+      display: block;
+    }
+    #result, #defi {
+      margin-top: 30px;
+      font-size: 20px;
+      text-align: center;
+      background: rgba(255, 0, 100, 0.1);
       padding: 20px;
-      border-radius: 10px;
-      background: #2c2c2c;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      max-width: 700px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 0, 150, 0.3);
+    }
+    .add-section {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255, 0, 100, 0.1);
+      box-shadow: 0 0 15px rgba(255, 0, 150, 0.3);
       text-align: center;
     }
-    button, select, input {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 1em;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button {
-      background: #e91e63;
-      color: white;
-    }
-    button:hover {
-      background: #c2185b;
-    }
-    select, input {
-      background: #333;
-      color: #fff;
-    }
-    #ajout {
-      margin-top: 30px;
-      background: #2c2c2c;
-      padding: 20px;
+    input, select {
+      padding: 10px;
+      margin: 5px;
       border-radius: 10px;
-      max-width: 700px;
+      border: none;
+      font-size: 16px;
+    }
+    input[type="text"] {
+      width: 70%;
+    }
+    button.action {
+      background: #e91e63;
     }
   </style>
 </head>
 <body>
-  <h1>Jeu de défis 😉</h1>
-  
-  <label for="niveau">Choisis un niveau :</label>
-  <select id="niveau">
-    <option value="1">Niveau 1 - Soft</option>
-    <option value="2">Niveau 2 - Osé</option>
-    <option value="3">Niveau 3 - Intermédiaire</option>
-    <option value="4">Niveau 4 - Hot</option>
-    <option value="5">Niveau 5 - Très hot</option>
-  </select>
-  
-  <div id="defi">Clique sur le bouton pour un défi</div>
-  <button onclick="nouveauDefi()">🎲 Nouveau défi</button>
+  <h1>🔥 Jeux de couple 🔥</h1>
 
-  <!-- Formulaire pour ajouter un défi -->
-  <div id="ajout">
-    <h2>➕ Ajouter un nouveau défi</h2>
-    <label for="nouveau">Écris ton défi :</label><br>
-    <input type="text" id="nouveau" placeholder="Ton défi..." size="50">
-    <br>
-    <label for="niveauAjout">Choisis un niveau :</label>
-    <select id="niveauAjout">
+  <!-- Menu -->
+  <nav>
+    <button onclick="showGame('av')">Action ou Vérité</button>
+    <button onclick="showGame('defis')">Défis par niveaux</button>
+  </nav>
+
+  <!-- Jeu Action ou Vérité -->
+  <section id="av" class="active">
+    <h2>🎲 Action ou Vérité</h2>
+    <div>
+      <button class="action" onclick="getAction()">Action</button>
+      <button class="action" onclick="getVerite()">Vérité</button>
+    </div>
+    <div id="result">Clique sur un bouton pour commencer…</div>
+
+    <div class="add-section">
+      <h3>➕ Ajouter un défi</h3>
+      <select id="type">
+        <option value="action">Action</option>
+        <option value="verite">Vérité</option>
+      </select>
+      <input type="text" id="newText" placeholder="Ton défi...">
+      <button onclick="addDefi()">Ajouter</button>
+    </div>
+  </section>
+
+  <!-- Jeu Défis par niveaux -->
+  <section id="defis">
+    <h2>🔥 Défis par niveaux</h2>
+    <label for="niveau">Choisis un niveau :</label>
+    <select id="niveau">
       <option value="1">Niveau 1 - Soft</option>
       <option value="2">Niveau 2 - Osé</option>
       <option value="3">Niveau 3 - Intermédiaire</option>
       <option value="4">Niveau 4 - Hot</option>
       <option value="5">Niveau 5 - Très hot</option>
     </select>
-    <br>
-    <button onclick="ajouterDefi()">Ajouter</button>
-  </div>
+    <button class="action" onclick="nouveauDefi()">🎲 Nouveau défi</button>
+    <div id="defi">Clique sur le bouton pour un défi</div>
 
-  <div style="margin-top:20px;">
-    <button onclick="exporterDefis()">💾 Exporter JSON</button>
-    <input type="file" id="importFile" accept=".json" onchange="importerDefis(event)">
-  </div>
+    <div class="add-section">
+      <h3>➕ Ajouter un défi</h3>
+      <input type="text" id="nouveau" placeholder="Ton défi...">
+      <select id="niveauAjout">
+        <option value="1">Niveau 1 - Soft</option>
+        <option value="2">Niveau 2 - Osé</option>
+        <option value="3">Niveau 3 - Intermédiaire</option>
+        <option value="4">Niveau 4 - Hot</option>
+        <option value="5">Niveau 5 - Très hot</option>
+      </select>
+      <button onclick="ajouterDefi()">Ajouter</button>
+    </div>
+  </section>
 
   <script>
-    // Chargement initial depuis localStorage
-    let defis = JSON.parse(localStorage.getItem("defis")) || [];
-
-    function sauvegarder() {
-      localStorage.setItem("defis", JSON.stringify(defis));
+    // === GESTION DU MENU ===
+    function showGame(id) {
+      document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
     }
 
-    // Tirer un défi aléatoire selon niveau
+    // === ACTION OU VERITE ===
+    let actions = JSON.parse(localStorage.getItem("actions")) || [
+      "Fais un massage sensuel à ton/ta partenaire.",
+      "Embrasse ton/ta partenaire passionnément.",
+      "Danse sexy devant ton/ta partenaire."
+    ];
+    let verites = JSON.parse(localStorage.getItem("verites")) || [
+      "Quelle est ta plus grande envie secrète au lit ?",
+      "Quel est ton fantasme avec moi ?",
+      "Quelle est ta position préférée ?"
+    ];
+
+    function getAction() {
+      const random = Math.floor(Math.random() * actions.length);
+      document.getElementById("result").innerHTML = "🔥 <b>Action :</b> " + actions[random];
+    }
+    function getVerite() {
+      const random = Math.floor(Math.random() * verites.length);
+      document.getElementById("result").innerHTML = "💋 <b>Vérité :</b> " + verites[random];
+    }
+    function addDefi() {
+      const type = document.getElementById("type").value;
+      const text = document.getElementById("newText").value.trim();
+      if (!text) { alert("Écris un défi !"); return; }
+      if (type === "action") {
+        actions.push(text);
+        localStorage.setItem("actions", JSON.stringify(actions));
+      } else {
+        verites.push(text);
+        localStorage.setItem("verites", JSON.stringify(verites));
+      }
+      document.getElementById("newText").value = "";
+      alert("Défi ajouté ✅");
+    }
+
+    // === DEFIS PAR NIVEAUX ===
+    let defis = JSON.parse(localStorage.getItem("defis")) || {
+      1: ["Fais un câlin de 2 minutes."],
+      2: ["Chuchote quelque chose d’osé."],
+      3: ["Embrasse ton/ta partenaire partout."],
+      4: ["Laisse ton/ta partenaire te bander les yeux."],
+      5: ["Enlève deux vêtements."]
+    };
+
     function nouveauDefi() {
       const niveau = document.getElementById("niveau").value;
-      let liste = defis.filter(d => d.niveau == niveau);
-
-      if (liste.length === 0) {
+      if (!defis[niveau] || defis[niveau].length === 0) {
         document.getElementById("defi").textContent = "Aucun défi pour ce niveau.";
         return;
       }
-
-      const index = Math.floor(Math.random() * liste.length);
-      document.getElementById("defi").textContent = liste[index].texte;
+      const index = Math.floor(Math.random() * defis[niveau].length);
+      document.getElementById("defi").textContent = defis[niveau][index];
     }
 
-    // Ajouter un nouveau défi
     function ajouterDefi() {
       const texte = document.getElementById("nouveau").value.trim();
       const niveau = document.getElementById("niveauAjout").value;
-
-      if (!texte) {
-        alert("⚠️ Écris un défi avant d’ajouter !");
-        return;
-      }
-
-      defis.push({ texte, niveau });
-      sauvegarder();
-
-      alert("✅ Défi ajouté !");
+      if (!texte) { alert("Écris un défi !"); return; }
+      if (!defis[niveau]) defis[niveau] = [];
+      defis[niveau].push(texte);
+      localStorage.setItem("defis", JSON.stringify(defis));
       document.getElementById("nouveau").value = "";
-    }
-
-    // Exporter en JSON
-    function exporterDefis() {
-      const blob = new Blob([JSON.stringify(defis, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "defis.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Importer un fichier JSON
-    function importerDefis(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (Array.isArray(imported)) {
-            defis = [...defis, ...imported];
-            sauvegarder();
-            alert("✅ Défis importés !");
-          } else {
-            alert("⚠️ Fichier JSON invalide !");
-          }
-        } catch (err) {
-          alert("⚠️ Erreur lors de la lecture du fichier !");
-        }
-      };
-      reader.readAsText(file);
+      alert("Défi ajouté ✅");
     }
   </script>
 </body>
