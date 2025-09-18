@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Défis Érotiques</title>
+  <title>Défis érotiques</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,100 +10,159 @@
       color: #fff;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
       min-height: 100vh;
       margin: 0;
       padding: 20px;
     }
-    input, select, button {
-      margin: 5px;
-      padding: 5px;
-      font-size: 16px;
-    }
-    #defiAffiche {
-      margin-top: 20px;
-      font-size: 20px;
+    #defi {
+      font-size: 1.3em;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #2c2c2c;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      max-width: 700px;
       text-align: center;
-      min-height: 50px;
     }
-    ul {
-      margin-top: 10px;
+    button, select, input {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    li {
-      margin-bottom: 5px;
+    button {
+      background: #e91e63;
+      color: white;
+    }
+    button:hover {
+      background: #c2185b;
+    }
+    select, input {
+      background: #333;
+      color: #fff;
+    }
+    #ajout {
+      margin-top: 30px;
+      background: #2c2c2c;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
     }
   </style>
 </head>
 <body>
-
-  <h1>Défis Érotiques</h1>
+  <h1>Jeu de défis 😉</h1>
+  
+  <label for="niveau">Choisis un niveau :</label>
+  <select id="niveau">
+    <option value="1">Niveau 1 - Soft</option>
+    <option value="2">Niveau 2 - Osé</option>
+    <option value="3">Niveau 3 - Intermédiaire</option>
+    <option value="4">Niveau 4 - Hot</option>
+    <option value="5">Niveau 5 - Très hot</option>
+  </select>
+  
+  <div id="defi">Clique sur le bouton pour un défi</div>
+  <button onclick="nouveauDefi()">🎲 Nouveau défi</button>
 
   <!-- Formulaire pour ajouter un défi -->
-  <input type="text" id="nouveauDefi" placeholder="Écris un nouveau défi">
-  <select id="niveauDefi">
-    <option value="1">Niveau 1 (Soft)</option>
-    <option value="2">Niveau 2</option>
-    <option value="3">Niveau 3</option>
-    <option value="4">Niveau 4</option>
-    <option value="5">Niveau 5 (Extrême)</option>
-  </select>
-  <button onclick="ajouterDefi()">Ajouter</button>
+  <div id="ajout">
+    <h2>➕ Ajouter un nouveau défi</h2>
+    <label for="nouveau">Écris ton défi :</label><br>
+    <input type="text" id="nouveau" placeholder="Ton défi..." size="50">
+    <br>
+    <label for="niveauAjout">Choisis un niveau :</label>
+    <select id="niveauAjout">
+      <option value="1">Niveau 1 - Soft</option>
+      <option value="2">Niveau 2 - Osé</option>
+      <option value="3">Niveau 3 - Intermédiaire</option>
+      <option value="4">Niveau 4 - Hot</option>
+      <option value="5">Niveau 5 - Très hot</option>
+    </select>
+    <br>
+    <button onclick="ajouterDefi()">Ajouter</button>
+  </div>
 
-  <!-- Bouton pour tirer un défi aléatoire -->
-  <button onclick="tirerDefi()">Tirer un défi aléatoire</button>
+  <div style="margin-top:20px;">
+    <button onclick="exporterDefis()">💾 Exporter JSON</button>
+    <input type="file" id="importFile" accept=".json" onchange="importerDefis(event)">
+  </div>
 
-  <div id="defiAffiche"></div>
+  <script>
+    // Chargement initial depuis localStorage
+    let defis = JSON.parse(localStorage.getItem("defis")) || [];
 
-  <!-- Liste locale des défis -->
-  <ul id="listeDefis"></ul>
+    function sauvegarder() {
+      localStorage.setItem("defis", JSON.stringify(defis));
+    }
 
-<script>
-  // Charger les défis depuis localStorage ou initialiser vide
-  let defis = JSON.parse(localStorage.getItem('defis')) || [];
+    // Tirer un défi aléatoire selon niveau
+    function nouveauDefi() {
+      const niveau = document.getElementById("niveau").value;
+      let liste = defis.filter(d => d.niveau == niveau);
 
-  // Fonction pour afficher la liste des défis
-  function afficherListe() {
-    const ul = document.getElementById('listeDefis');
-    ul.innerHTML = '';
-    defis.forEach((d, index) => {
-      const li = document.createElement('li');
-      li.textContent = `Niveau ${d.niveau}: ${d.defi}`;
-      const btnSuppr = document.createElement('button');
-      btnSuppr.textContent = 'Supprimer';
-      btnSuppr.onclick = () => { supprimerDefi(index); };
-      li.appendChild(btnSuppr);
-      ul.appendChild(li);
-    });
-  }
+      if (liste.length === 0) {
+        document.getElementById("defi").textContent = "Aucun défi pour ce niveau.";
+        return;
+      }
 
-  // Ajouter un nouveau défi
-  function ajouterDefi() {
-    const texte = document.getElementById('nouveauDefi').value.trim();
-    const niveau = document.getElementById('niveauDefi').value;
-    if (!texte) return alert('Écris un défi !');
-    defis.push({defi: texte, niveau: niveau});
-    localStorage.setItem('defis', JSON.stringify(defis));
-    document.getElementById('nouveauDefi').value = '';
-    afficherListe();
-  }
+      const index = Math.floor(Math.random() * liste.length);
+      document.getElementById("defi").textContent = liste[index].texte;
+    }
 
-  // Supprimer un défi
-  function supprimerDefi(index) {
-    defis.splice(index, 1);
-    localStorage.setItem('defis', JSON.stringify(defis));
-    afficherListe();
-  }
+    // Ajouter un nouveau défi
+    function ajouterDefi() {
+      const texte = document.getElementById("nouveau").value.trim();
+      const niveau = document.getElementById("niveauAjout").value;
 
-  // Tirer un défi aléatoire
-  function tirerDefi() {
-    if (defis.length === 0) return alert('Aucun défi enregistré !');
-    const aleatoire = defis[Math.floor(Math.random() * defis.length)];
-    document.getElementById('defiAffiche').textContent = `Niveau ${aleatoire.niveau}: ${aleatoire.defi}`;
-  }
+      if (!texte) {
+        alert("⚠️ Écris un défi avant d’ajouter !");
+        return;
+      }
 
-  // Afficher la liste au chargement
-  afficherListe();
-</script>
+      defis.push({ texte, niveau });
+      sauvegarder();
 
+      alert("✅ Défi ajouté !");
+      document.getElementById("nouveau").value = "";
+    }
+
+    // Exporter en JSON
+    function exporterDefis() {
+      const blob = new Blob([JSON.stringify(defis, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "defis.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Importer un fichier JSON
+    function importerDefis(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            defis = [...defis, ...imported];
+            sauvegarder();
+            alert("✅ Défis importés !");
+          } else {
+            alert("⚠️ Fichier JSON invalide !");
+          }
+        } catch (err) {
+          alert("⚠️ Erreur lors de la lecture du fichier !");
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
 </body>
 </html>
